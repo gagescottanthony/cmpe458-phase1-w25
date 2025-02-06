@@ -144,7 +144,22 @@ Token get_next_token(const char *input, int *pos) {
 
     // TODO: Add string literal handling here (escape characters too)
     // String literal handler
-
+    if(c == '"'){
+        int i = 0;
+        do{
+            token.lexeme[i++] = c;
+            (*pos)++;
+            c = input[*pos];
+        } while(c != '"' && i < sizeof(token.lexeme) - 1);
+        //terminate string
+        //need to include space for the last closing bracket
+        token.lexeme[i++] = c;
+        (*pos)++;
+        c = input[*pos];
+        token.lexeme[i] = '\0';
+        token.type = TOKEN_STRING_LITERAL;
+        return token;
+    }
     // TODO: Add all remaining operators and test them
     // Operator handler
     if (c == '+' || c == '-') {
@@ -200,7 +215,7 @@ Token get_next_token(const char *input, int *pos) {
 // This is a basic lexer that handles numbers (e.g., "123", "456"), basic operators (+ and -), consecutive operator errors, whitespace and newlines, with simple line tracking for error reporting.
 
 int main() {
-    const char *input = "123 + 456 - 789\n1 ++ 2 \nint print myVar my_Var"; // Test with multi-line input
+    const char *input = "123 + 456 - 789\n1 ++ 2 \nint print myVar my_Var \"String Literal\""; // Test with multi-line input
     int position = 0;
     Token token;
 
