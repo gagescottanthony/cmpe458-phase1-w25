@@ -1,3 +1,4 @@
+
 /* lexer.c */
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,19 +27,15 @@ void print_error(ErrorType error, int line, const char *lexeme) {
         case ERROR_UNTERMINATED_STRING:
             printf("Unterminated string\n");
             break;
-        case ERROR_INVALID_FUNCTION_RETURN:
-            printf("Invalid function return\n");
+        case ERROR_OPEN_DELIMITER:
+            printf("Unclosed brackets\n");
             break;
         default:
             printf("Unknown error\n");
     }
 }
 
-/* Print token information
- *
- *  TODO Update your printing function accordingly
- */
-
+/* Print token information */
 void print_token(Token token) {
     if (token.error != ERROR_NONE) {
         print_error(token.error, token.line, token.lexeme);
@@ -99,8 +96,18 @@ Token get_next_token(const char *input, int *pos) {
     c = input[*pos];
 
     // TODO: Add comment handling here
+    // Comment handler
+    // Single line comment
+    if (c == '#') {
 
-    // Handle numbers
+    }
+
+    // Multi line comment
+    if (c == '/' && input[*pos + 1] == '*') {
+
+    }
+
+    // Number handler
     if (isdigit(c)) {
         int i = 0;
         do {
@@ -114,9 +121,7 @@ Token get_next_token(const char *input, int *pos) {
         return token;
     }
 
-    // TODO: Add keyword and identifier handling here
-    // Hint: You'll have to add support for keywords and identifiers, and then string literals
-    // Handle keywords and identifiers, can start with only alphabetic characters
+    // Keyword and Identifier handler
     if(isalpha(c) || c == '_'){
         int i = 0;
 
@@ -137,9 +142,11 @@ Token get_next_token(const char *input, int *pos) {
         return token;
     }
 
-    // TODO: Add string literal handling here
+    // TODO: Add string literal handling here (escape characters too)
+    // String literal handler
 
-    // Handle operators
+    // TODO: Add all remaining operators and test them
+    // Operator handler
     if (c == '+' || c == '-') {
         if (last_token_type == 'o') {
             // Check for consecutive operators
@@ -157,7 +164,30 @@ Token get_next_token(const char *input, int *pos) {
         return token;
     }
 
-    // TODO: Add delimiter handling here
+    // TODO: TEST THIS DELIMITER CODE
+    // Delimiter handler
+    // Bracket based Delimiters (must be closed)
+    if (c == '(' || c == '{' || c == '[' ||
+        c == ')' || c == '}' || c == ']') {
+        // should maybe write code to check for closure, but not yet
+        token.type = TOKEN_DELIMITER;
+        token.lexeme[0] = c;
+        token.lexeme[1] = '\0';
+        last_token_type = 'b'; //brackets (any type)
+        // note: could have last token type of r (regular), c {curvy}, s [square]
+        (*pos)++;
+        return token;
+    }
+
+    // Generic Delimiters (don't need closure)
+    if (c == ';' || c == ',') {
+        token.type = TOKEN_DELIMITER;
+        token.lexeme[0] = c;
+        token.lexeme[1] = '\0';
+        last_token_type = 'd'; //delimiter
+        (*pos)++;
+        return token;
+    }
 
     // Handle invalid characters
     token.error = ERROR_INVALID_CHAR;

@@ -1,6 +1,3 @@
-//
-// Created by Youssef
-//
 
 /* tokens.h */
 #ifndef TOKENS_H
@@ -23,7 +20,7 @@ typedef enum {
     TOKEN_IDENTIFIER,
     TOKEN_STRING_LITERAL,   // e.g. "SeaPlus+"
     TOKEN_DELIMITER,        // e.g. {} [] ()
-    TOKEN_SPECIAL_CHARACTER // e.g. _
+    TOKEN_SPECIAL_CHARACTER // e.g. _ &
 } TokenType;
 
 /* Error types for lexical analysis
@@ -35,7 +32,7 @@ typedef enum {
     ERROR_INVALID_NUMBER,
     ERROR_CONSECUTIVE_OPERATORS,
     ERROR_UNTERMINATED_STRING,
-    ERROR_INVALID_FUNCTION_RETURN
+    ERROR_OPEN_DELIMITER
 } ErrorType;
 
 /* Token structure to store token information
