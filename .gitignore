@@ -1,1 +1,3 @@
 /my-mini-compiler/cmake-build-debug/
+/build/
+/.vscode/
