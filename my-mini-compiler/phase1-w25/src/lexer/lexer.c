@@ -87,18 +87,18 @@ Token get_next_token(const char *input, int *pos) {
         (*pos)++;
     }
 
+    // Check for end of file
     if (input[*pos] == '\0') {
         token.type = TOKEN_EOF;
         strcpy(token.lexeme, "EOF");
         return token;
     }
 
+    // get current character
     c = input[*pos];
 
-    // TODO: Add comment handling here
     // Comment handler
     // Single line comment
-    //can keep skipping until newline character is reached
     if (c == '#') {
         do{
             (*pos)++;
@@ -174,24 +174,22 @@ Token get_next_token(const char *input, int *pos) {
         return token;
     }
 
-    // TODO: Add string literal handling here (escape characters too)
     // String literal handler
     if(c == '"'){
         int i = 0;
-        int untermed = 0;
+        int unterminated = 0;
         do{
             token.lexeme[i++] = c;
             (*pos)++;
             c = input[*pos];
-            if(c = '\0'){
-                //string has reached EOF
-                untermed = 1;
+            if(c == '\0'){ //string has reached EOF
+                unterminated = 1;
                 break;
             }
         } while(c != '"' && i < sizeof(token.lexeme) - 1);
         //terminate string
         //need to include space for the last closing quote
-        if(untermed == 1){
+        if(unterminated == 1){
             token.error = ERROR_UNTERMINATED_STRING;
         }
         else{
@@ -201,14 +199,12 @@ Token get_next_token(const char *input, int *pos) {
             token.lexeme[i] = '\0';
         }
         token.type = TOKEN_STRING_LITERAL;
-        last_token_type = 's';
+        last_token_type = 's'; //string
         return token;
     }
-    // TODO: Add all remaining operators and test them
+
     // Operator handler
     /* List of Operators (Grouped by first character and behaviour):
-    
-    
     //RULE: Standalone
     $:  $ (factorial)
 
@@ -239,7 +235,6 @@ Token get_next_token(const char *input, int *pos) {
     if ( c == '$' || c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '=' || c == '!'  || c == '|' || c == '^' || c == '&' || c == '<' || c== '>') {
         // Check for consecutive operators
         if (last_token_type == 'o') {
-
             token.error = ERROR_CONSECUTIVE_OPERATORS;
             token.lexeme[0] = c;
             token.lexeme[1] = '\0';
@@ -296,7 +291,6 @@ Token get_next_token(const char *input, int *pos) {
                 last_token_type = 'o';
                 return token;
             }
-            break;
 
         //Can be trailed only by itself
         case '|':
@@ -318,7 +312,6 @@ Token get_next_token(const char *input, int *pos) {
                 last_token_type = 'o';
                 return token;
             }
-            break;
 
         //Can be trailed by itself or question mark and CANT standalone
         case '&':
@@ -377,12 +370,11 @@ Token get_next_token(const char *input, int *pos) {
                 last_token_type = 'o';
                 return token;
             }
-            break;
 
         //Error -> in if block but not given a case
         default:
             printf("[WARN]: Character %c was accepted by if statement but not assigned a case. Assuming standalone operator.\n", c);
-        //Standalone
+            //Standalone
         case '$':
             token.lexeme[0] = c;
             token.lexeme[1] = '\0';
@@ -390,11 +382,9 @@ Token get_next_token(const char *input, int *pos) {
             *pos += 1;
             last_token_type = 'o';
             return token;
-            break;
         }
     }
 
-    // TODO: TEST THIS DELIMITER CODE
     // Delimiter handler
     // Bracket based Delimiters (must be closed)
     if (c == '(' || c == '{' || c == '[' ||
@@ -430,16 +420,48 @@ Token get_next_token(const char *input, int *pos) {
 // This is a basic lexer that handles numbers (e.g., "123", "456"), basic operators (+ and -), consecutive operator errors, whitespace and newlines, with simple line tracking for error reporting.
 
 int main() {
-    const char *input = "123 + 456 - 789\n1 ++ 2 \nint print /* this is a multi line \n comment */ myVar my_Var \n #one line comment\n \"String Literal\""; // Test with multi-line input
+    FILE *file = fopen("../phase1-w25/test/input_valid.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file\n");
+        return 1;
+    }
+
+    // get file size
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    rewind(file);
+
+    // get buffer size based on file size for chars
+    char *buffer = malloc(file_size + 1);
+    if (!buffer) {
+        printf("Memory allocation failed.\n");
+        fclose(file);
+        return 1;
+    }
+
+    // fill buffer with full file of chars in order
+    size_t bytes_read = fread(buffer, 1, file_size, file);
+    buffer[bytes_read] = '\0';
+    size_t b = 0;
+    for (size_t i = 0; i < bytes_read; i++) {
+        if (buffer[i] != '\r') {
+            buffer[b++] = buffer[i];
+        }
+    }
+    buffer[b] = '\0';
+
+    // start at beginning of buffer
     int position = 0;
     Token token;
 
-    printf("Analyzing input:\n%s\n\n", input);
-
+    // perform tokenization
+    printf("Analyzing input:\n%s\n\n", buffer);
     do {
-        token = get_next_token(input, &position);
+        token = get_next_token(buffer, &position);
         print_token(token);
     } while (token.type != TOKEN_EOF);
 
+    free(buffer);
+    fclose(file);
     return 0;
 }
