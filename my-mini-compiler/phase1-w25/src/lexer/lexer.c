@@ -87,18 +87,18 @@ Token get_next_token(const char *input, int *pos) {
         (*pos)++;
     }
 
+    // Check for end of file
     if (input[*pos] == '\0') {
         token.type = TOKEN_EOF;
         strcpy(token.lexeme, "EOF");
         return token;
     }
 
+    // get current character
     c = input[*pos];
 
-    // TODO: Add comment handling here
     // Comment handler
     // Single line comment
-    //can keep skipping until newline character is reached
     if (c == '#') {
         do{
             (*pos)++;
@@ -147,7 +147,7 @@ Token get_next_token(const char *input, int *pos) {
 
         token.lexeme[i] = '\0';
         token.type = TOKEN_NUMBER;
-        last_token_type = 'n';
+        last_token_type = 'n'; //number
         return token;
     }
 
@@ -165,50 +165,45 @@ Token get_next_token(const char *input, int *pos) {
 
         if(iskeyword(token.lexeme)){
             token.type = TOKEN_KEYWORD;
-            last_token_type = 'k';
+            last_token_type = 'k'; //keyword
         }
         else{
             token.type = TOKEN_IDENTIFIER;
-            last_token_type = 'i';
+            last_token_type = 'i'; //identifier
         }
         return token;
     }
 
-    // TODO: Add string literal handling here (escape characters too)
     // String literal handler
     if(c == '"'){
         int i = 0;
-        int untermed = 0;
+        int unterminated = 0;
         do{
             token.lexeme[i++] = c;
             (*pos)++;
             c = input[*pos];
-            if(c = '\0'){
-                //string has reached EOF
-                untermed = 1;
+            if(c == '\0'){ //string has reached EOF
+                unterminated = 1;
                 break;
             }
         } while(c != '"' && i < sizeof(token.lexeme) - 1);
         //terminate string
         //need to include space for the last closing quote
-        if(untermed == 1){
+        if(unterminated == 1){
             token.error = ERROR_UNTERMINATED_STRING;
         }
         else{
             token.lexeme[i++] = c;
             (*pos)++;
-            c = input[*pos];
             token.lexeme[i] = '\0';
         }
         token.type = TOKEN_STRING_LITERAL;
-        last_token_type = 's';
+        last_token_type = 's'; //string
         return token;
     }
-    // TODO: Add all remaining operators and test them
+
     // Operator handler
     /* List of Operators (Grouped by first character and behaviour):
-    
-    
     //RULE: Standalone
     $:  $ (factorial)
 
@@ -238,8 +233,7 @@ Token get_next_token(const char *input, int *pos) {
     */
     if ( c == '$' || c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '=' || c == '!'  || c == '|' || c == '^' || c == '&' || c == '<' || c== '>') {
         // Check for consecutive operators
-        if (last_token_type == 'o') {
-
+        if (last_token_type == 'o' && c != '!' && c != '$') {
             token.error = ERROR_CONSECUTIVE_OPERATORS;
             token.lexeme[0] = c;
             token.lexeme[1] = '\0';
@@ -251,74 +245,112 @@ Token get_next_token(const char *input, int *pos) {
         char c_next = input[*pos + 1]; // c_next should always be in array bound, if passed in string was completed with a null terminal.
         switch (c) {
         
-        //Can be trailed by one repetition or an equals sign
-        case '+':
-        case '-':
-            if (c_next == '=' || c_next == c) { // +=, -= or ++, --
-                token.lexeme[0] = c;
-                token.lexeme[1] = c_next;
-                token.lexeme[2] = '\0';
-                token.type = TOKEN_OPERATOR;
-                *pos += 2;
-                last_token_type = 'o';
-                return token;
-            }
-            else { // +, -
+            //Can be trailed by one repetition or an equals sign
+            case '+':
+            case '-':
+                if (c_next == '=') { // += and -= cases
+                    token.lexeme[0] = c;
+                    token.lexeme[1] = c_next;
+                    token.lexeme[2] = '\0';
+                    token.type = TOKEN_OPERATOR;
+                    *pos += 2;
+                    last_token_type = 'q'; //equals
+                    return token;
+                }
+                if(c_next == c) { // ++ and -- cases
+                    token.lexeme[0] = c;
+                    token.lexeme[1] = c_next;
+                    token.lexeme[2] = '\0';
+                    token.type = TOKEN_OPERATOR;
+                    *pos += 2;
+                    last_token_type = 'o'; //operators
+                    return token;
+                }
+                // +, - case
                 token.lexeme[0] = c;
                 token.lexeme[1] = '\0';
                 token.type = TOKEN_OPERATOR;
                 *pos += 1;
-                last_token_type = 'o';
+                last_token_type = 'o'; //operators
                 return token;
-            }
-            break;
 
-        //Can be trailed only by an equals sign
-        case '*':
-        case '/':
-        case '%':
-        case '=':
-        case '!':
-            if (c_next == '=') { // *=, /=, %=, ==, !=
-                token.lexeme[0] = c;
-                token.lexeme[1] = c_next;
-                token.lexeme[2] = '\0';
-                token.type = TOKEN_OPERATOR;
-                *pos += 2;
-                last_token_type = 'o';
-                return token;
-            }
-            else { // *, /, %, =, !
+            //Can be trailed only by an equals sign
+            case '*':
+            case '/':
+            case '%':
+            case '=':
+                if (c_next == '=') { // *=, /=, %=, ==, !=
+                    token.lexeme[0] = c;
+                    token.lexeme[1] = c_next;
+                    token.lexeme[2] = '\0';
+                    token.type = TOKEN_OPERATOR;
+                    *pos += 2;
+                    //checking if we have consecutive equals operators
+                    if (last_token_type == 'q') {
+                        token.error = ERROR_CONSECUTIVE_OPERATORS;
+                        return token;
+                    }
+                    last_token_type = 'q'; //equals
+                    return token;
+                }
+                // / *, /, %, =, !
                 token.lexeme[0] = c;
                 token.lexeme[1] = '\0';
                 token.type = TOKEN_OPERATOR;
                 *pos += 1;
-                last_token_type = 'o';
+                if(c == '=') { //check if equals
+                    if (last_token_type == 'q') { //ensure no repeated equals
+                        token.error = ERROR_CONSECUTIVE_OPERATORS;
+                        return token;
+                    }
+                    last_token_type = 'q'; //equals
+                }
+                last_token_type = 'o'; //operator
                 return token;
-            }
-            break;
 
-        //Can be trailed only by itself
-        case '|':
-        case '^':
-            if (c_next == c) { // ||, ^^
-                token.lexeme[0] = c;
-                token.lexeme[1] = c_next;
-                token.lexeme[2] = '\0';
-                token.type = TOKEN_OPERATOR;
-                *pos += 2;
-                last_token_type = 'o';
-                return token;
-            }
-            else { // |, ^
+            //Can be chained together as many times as you want !!!!true
+            case '!':
+                if (c_next == '=') { //!= case
+                    token.lexeme[0] = c;
+                    token.lexeme[1] = c_next;
+                    token.lexeme[2] = '\0';
+                    token.type = TOKEN_OPERATOR;
+                    *pos += 2;
+                    if (last_token_type == 'q') {
+                        token.error = ERROR_CONSECUTIVE_OPERATORS;
+                        return token;
+                    }
+                    last_token_type = 'q'; //equals
+                    return token;
+                }
                 token.lexeme[0] = c;
                 token.lexeme[1] = '\0';
                 token.type = TOKEN_OPERATOR;
                 *pos += 1;
-                last_token_type = 'o';
+                last_token_type = 'u'; //repeatable operator
                 return token;
-            }
-            break;
+
+
+
+            //Can be trailed only by itself
+            case '|':
+            case '^':
+                if (c_next == c) { // ||, ^^
+                    token.lexeme[0] = c;
+                    token.lexeme[1] = c_next;
+                    token.lexeme[2] = '\0';
+                    token.type = TOKEN_OPERATOR;
+                    *pos += 2;
+                    last_token_type = 'o'; //operator
+                    return token;
+                }
+                // |, ^
+                token.lexeme[0] = c;
+                token.lexeme[1] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 1;
+                last_token_type = 'o'; //operator
+                return token;
 
         //Can be trailed by itself or question mark and CANT standalone
         case '&':
@@ -327,7 +359,7 @@ Token get_next_token(const char *input, int *pos) {
                 token.lexeme[1] = '\0';
                 token.type = TOKEN_OPERATOR;
                 *pos += 1;
-                last_token_type = 'o';
+                last_token_type = 'o'; //operator
                 return token;
             }
             else {
@@ -340,7 +372,8 @@ Token get_next_token(const char *input, int *pos) {
         case '>':
             if (c_next == c) { // <<, <<<, >>, >>>
                 //input of *pos+2 should be in bound because c_next was a regular character. at worst it is the null terminator (unless it is missing from passed char array)
-                if (input[*pos + 2] == c) { // <<<, >>>
+                // <<<, >>>
+                if (input[*pos + 2] == c) {
                     token.lexeme[0] = c;
                     token.lexeme[1] = c;
                     token.lexeme[2] = c;
@@ -349,18 +382,18 @@ Token get_next_token(const char *input, int *pos) {
                     last_token_type = 'o';
                     return token;
                 }
-                else { // <<, >>
-                    token.lexeme[0] = c;
-                    token.lexeme[1] = c;
-                    token.lexeme[2] = '\0';
-                    token.type = TOKEN_OPERATOR;
-                    *pos += 2;
-                    last_token_type = 'o';
-                    return token;
-                }
+                // <<, >>
+                token.lexeme[0] = c;
+                token.lexeme[1] = c;
+                token.lexeme[2] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 2;
+                last_token_type = 'o';
+                return token;
             }
             //must be separate to prevent <=< from being valid, for example.
-            else if (c_next == '=') { // <=, >=
+            // <=, >=
+            if (c_next == '=') {
                 token.lexeme[0] = c;
                 token.lexeme[1] = c_next;
                 token.lexeme[2] = '\0';
@@ -369,32 +402,29 @@ Token get_next_token(const char *input, int *pos) {
                 last_token_type = 'o';
                 return token;
             }
-            else { // <, >
-                token.lexeme[0] = c;
-                token.lexeme[1] = '\0';
-                token.type = TOKEN_OPERATOR;
-                *pos += 1;
-                last_token_type = 'o';
-                return token;
-            }
-            break;
-
-        //Error -> in if block but not given a case
-        default:
-            printf("[WARN]: Character %c was accepted by if statement but not assigned a case. Assuming standalone operator.\n", c);
-        //Standalone
-        case '$':
+            // <, >
             token.lexeme[0] = c;
             token.lexeme[1] = '\0';
             token.type = TOKEN_OPERATOR;
             *pos += 1;
             last_token_type = 'o';
             return token;
-            break;
+
+
+        //Error -> in if block but not given a case
+        default:
+            printf("[WARN]: Character %c was accepted by if statement but not assigned a case. Assuming standalone operator.\n", c);
+            //Standalone
+        case '$':
+            token.lexeme[0] = c;
+            token.lexeme[1] = '\0';
+            token.type = TOKEN_OPERATOR;
+            *pos += 1;
+            last_token_type = 'u'; //technically infinitely repeatable $$5 so unary
+            return token;
         }
     }
 
-    // TODO: TEST THIS DELIMITER CODE
     // Delimiter handler
     // Bracket based Delimiters (must be closed)
     if (c == '(' || c == '{' || c == '[' ||
@@ -423,23 +453,56 @@ Token get_next_token(const char *input, int *pos) {
     token.error = ERROR_INVALID_CHAR;
     token.lexeme[0] = c;
     token.lexeme[1] = '\0';
+    last_token_type = 'e'; //error
     (*pos)++;
     return token;
 }
 
-// This is a basic lexer that handles numbers (e.g., "123", "456"), basic operators (+ and -), consecutive operator errors, whitespace and newlines, with simple line tracking for error reporting.
-
 int main() {
-    const char *input = "123 + 456 - 789\n1 ++ 2 \nint print /* this is a multi line \n comment */ myVar my_Var \n #one line comment\n \"String Literal\""; // Test with multi-line input
+    // get file
+    FILE *file = fopen("../phase1-w25/test/input_valid.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file\n");
+        return 1;
+    }
+
+    // get file size
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    rewind(file);
+
+    // get buffer size based on file size for chars
+    char *buffer = malloc(file_size + 1);
+    if (!buffer) {
+        printf("Memory allocation failed.\n");
+        fclose(file);
+        return 1;
+    }
+
+    // fill buffer with full file of chars in order
+    size_t bytes_read = fread(buffer, 1, file_size, file);
+    buffer[bytes_read] = '\0';
+    size_t b = 0;
+    for (size_t i = 0; i < bytes_read; i++) {
+        if (buffer[i] != '\r') {
+            buffer[b++] = buffer[i];
+        }
+    }
+    buffer[b] = '\0';
+
+    // start at beginning of buffer
     int position = 0;
     Token token;
 
-    printf("Analyzing input:\n%s\n\n", input);
-
+    // perform tokenization
+    printf("Analyzing input:\n%s\n\n", buffer);
     do {
-        token = get_next_token(input, &position);
+        token = get_next_token(buffer, &position);
         print_token(token);
     } while (token.type != TOKEN_EOF);
 
+    // free memory "he ain't deserve to be locked up"
+    free(buffer);
+    fclose(file);
     return 0;
 }
