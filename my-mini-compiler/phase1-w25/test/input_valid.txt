@@ -5,7 +5,11 @@ x--;
 x += 5;
 int y = $x;
 func (){}[]
+if(int i != x){}
 just words as indentifiers
+&
+_
+x && y
 #one line comment
 int sanityCheck;
 /* multi line

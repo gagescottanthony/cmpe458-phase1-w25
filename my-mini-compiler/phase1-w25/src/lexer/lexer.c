@@ -151,10 +151,19 @@ Token get_next_token(const char *input, int *pos) {
         return token;
     }
 
+    // Special character handler
+    if((c == '&' && input[*pos + 1] != '&') || c == '_') {
+        token.lexeme[0] = c;
+        token.lexeme[1] = '\0';
+        token.type = TOKEN_SPECIAL_CHARACTER;
+        (*pos)++;
+        last_token_type = 'z'; //special character
+        return token;
+    }
+
     // Keyword and Identifier handler
     if(isalpha(c) || c == '_'){
         int i = 0;
-
         do{
             token.lexeme[i++] = c;
             (*pos)++;
@@ -356,14 +365,12 @@ Token get_next_token(const char *input, int *pos) {
         case '&':
             if (c_next == c || c_next == '?') { // &&, &?
                 token.lexeme[0] = c;
-                token.lexeme[1] = '\0';
+                token.lexeme[1] = c_next;
+                token.lexeme[2] = '\0';
                 token.type = TOKEN_OPERATOR;
-                *pos += 1;
+                *pos += 2;
                 last_token_type = 'o'; //operator
                 return token;
-            }
-            else {
-                //TODO: ENSURE DISQUALIFICATION FOR SPECIAL CHARACTER &, UNLESS HANDLED BEFORE OPERATOR CODE
             }
             break;
 
