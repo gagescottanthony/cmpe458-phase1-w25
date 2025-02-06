@@ -467,7 +467,7 @@ Token get_next_token(const char *input, int *pos) {
 
 int main() {
     // get file
-    FILE *file = fopen("../phase1-w25/test/input_incorrect_lex.txt", "r");
+    FILE *file = fopen("../phase1-w25/test/input_correct_lex.txt", "r");
     if (file == NULL) {
         printf("Error opening file\n");
         return 1;
