@@ -152,7 +152,7 @@ Token get_next_token(const char *input, int *pos) {
             c = input[*pos];
         } while(c != '"' && i < sizeof(token.lexeme) - 1);
         //terminate string
-        //need to include space for the last closing bracket
+        //need to include space for the last closing quote
         token.lexeme[i++] = c;
         (*pos)++;
         c = input[*pos];
