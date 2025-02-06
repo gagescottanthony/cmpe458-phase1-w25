@@ -146,6 +146,7 @@ Token get_next_token(const char *input, int *pos) {
 
         token.lexeme[i] = '\0';
         token.type = TOKEN_NUMBER;
+        last_token_type = 'n';
         return token;
     }
 
@@ -163,9 +164,11 @@ Token get_next_token(const char *input, int *pos) {
 
         if(iskeyword(token.lexeme)){
             token.type = TOKEN_KEYWORD;
+            last_token_type = 'k';
         }
         else{
             token.type = TOKEN_IDENTIFIER;
+            last_token_type = 'i';
         }
         return token;
     }
@@ -186,6 +189,7 @@ Token get_next_token(const char *input, int *pos) {
         c = input[*pos];
         token.lexeme[i] = '\0';
         token.type = TOKEN_STRING_LITERAL;
+        last_token_type = 's';
         return token;
     }
     // TODO: Add all remaining operators and test them
