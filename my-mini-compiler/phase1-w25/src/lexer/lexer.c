@@ -98,13 +98,41 @@ Token get_next_token(const char *input, int *pos) {
     // TODO: Add comment handling here
     // Comment handler
     // Single line comment
+    //can keep skipping until newline character is reached
     if (c == '#') {
+        do{
+            (*pos)++;
+            c = input[*pos];
+        } while(c != '\n');
+        //skip newline character
+        (*pos)++;
+        c = input[*pos];
 
+        while(c == ' ' || c == '\t' || c == '\n'  && c != '\0'){
+            (*pos)++;
+            c = input[*pos];
+        }
     }
 
     // Multi line comment
+    // should skip until */ is reached
     if (c == '/' && input[*pos + 1] == '*') {
-
+        (*pos)++;
+        c = input[*pos];
+       do{
+            (*pos)++;
+            c = input[*pos];
+       }while((c != '*') && (input[*pos + 1] != '/'));
+       while(c == '*' || c == '/'){
+        //skip comment closing
+            (*pos)++;
+            c = input[*pos];
+       }
+       //skip to start of next token
+        while(c == ' ' || c == '\t' || c == '\n'  && c != '\0'){
+            (*pos)++;
+            c = input[*pos];
+        }
     }
 
     // Number handler
@@ -118,6 +146,7 @@ Token get_next_token(const char *input, int *pos) {
 
         token.lexeme[i] = '\0';
         token.type = TOKEN_NUMBER;
+        last_token_type = 'n';
         return token;
     }
 
@@ -135,9 +164,11 @@ Token get_next_token(const char *input, int *pos) {
 
         if(iskeyword(token.lexeme)){
             token.type = TOKEN_KEYWORD;
+            last_token_type = 'k';
         }
         else{
             token.type = TOKEN_IDENTIFIER;
+            last_token_type = 'i';
         }
         return token;
     }
@@ -150,6 +181,11 @@ Token get_next_token(const char *input, int *pos) {
             token.lexeme[i++] = c;
             (*pos)++;
             c = input[*pos];
+            if(c = '\0'){
+                //string has reached EOF
+                token.error = ERROR_UNTERMINATED_STRING;
+                break;
+            }
         } while(c != '"' && i < sizeof(token.lexeme) - 1);
         //terminate string
         //need to include space for the last closing quote
@@ -158,6 +194,7 @@ Token get_next_token(const char *input, int *pos) {
         c = input[*pos];
         token.lexeme[i] = '\0';
         token.type = TOKEN_STRING_LITERAL;
+        last_token_type = 's';
         return token;
     }
     // TODO: Add all remaining operators and test them
@@ -386,7 +423,7 @@ Token get_next_token(const char *input, int *pos) {
 // This is a basic lexer that handles numbers (e.g., "123", "456"), basic operators (+ and -), consecutive operator errors, whitespace and newlines, with simple line tracking for error reporting.
 
 int main() {
-    const char *input = "123 + 456 - 789\n1 ++ 2 \nint print myVar my_Var \"String Literal\""; // Test with multi-line input
+    const char *input = "123 + 456 - 789\n1 ++ 2 \nint print /* this is a multi line \n comment */ myVar my_Var \n #one line comment\n \"String Literal\""; // Test with multi-line input
     int position = 0;
     Token token;
 
