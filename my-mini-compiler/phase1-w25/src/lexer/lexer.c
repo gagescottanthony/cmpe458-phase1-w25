@@ -22,6 +22,12 @@ void print_error(ErrorType error, int line, const char *lexeme) {
         case ERROR_CONSECUTIVE_OPERATORS:
             printf("Consecutive operators not allowed\n");
             break;
+        case ERROR_UNTERMINATED_STRING:
+            printf("Unterminated string\n");
+            break;
+        case ERROR_INVALID_FUNCTION_RETURN:
+            printf("Invalid function return\n");
+            break;
         default:
             printf("Unknown error\n");
     }
@@ -49,11 +55,25 @@ void print_token(Token token) {
         case TOKEN_EOF:
             printf("EOF");
             break;
+        case TOKEN_KEYWORD:
+            printf("KEYWORD");
+            break;
+        case TOKEN_IDENTIFIER:
+            printf("IDENTIFIER");
+            break;
+        case TOKEN_STRING_LITERAL:
+            printf("STRING_LITERAL");
+            break;
+        case TOKEN_DELIMITER:
+            printf("DELIMITER");
+            break;
+        case TOKEN_SPECIAL_CHARACTER:
+            printf("SPECIAL_CHARACTER");
+            break;
         default:
             printf("UNKNOWN");
     }
-    printf(" | Lexeme: '%s' | Line: %d\n",
-           token.lexeme, token.line);
+    printf(" | Lexeme: '%s' | Line: %d\n", token.lexeme, token.line);
 }
 
 /* Get next token from input */

@@ -16,9 +16,14 @@
  */
 typedef enum {
     TOKEN_EOF,
-    TOKEN_NUMBER,     // e.g., "123", "456"
-    TOKEN_OPERATOR,   // e.g., "+", "-"
-    TOKEN_ERROR
+    TOKEN_NUMBER,           // e.g. 123
+    TOKEN_OPERATOR,         // e.g. + - * / % && ||
+    TOKEN_ERROR,            // e.g. ERROR_INVALID_CHAR
+    TOKEN_KEYWORD,          // e.g. func if until while for
+    TOKEN_IDENTIFIER,
+    TOKEN_STRING_LITERAL,   // e.g. "SeaPlus+"
+    TOKEN_DELIMITER,        // e.g. {} [] ()
+    TOKEN_SPECIAL_CHARACTER // e.g. _
 } TokenType;
 
 /* Error types for lexical analysis
@@ -28,7 +33,9 @@ typedef enum {
     ERROR_NONE,
     ERROR_INVALID_CHAR,
     ERROR_INVALID_NUMBER,
-    ERROR_CONSECUTIVE_OPERATORS
+    ERROR_CONSECUTIVE_OPERATORS,
+    ERROR_UNTERMINATED_STRING,
+    ERROR_INVALID_FUNCTION_RETURN
 } ErrorType;
 
 /* Token structure to store token information
