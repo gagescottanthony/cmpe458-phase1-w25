@@ -1,3 +1,5 @@
 /my-mini-compiler/cmake-build-debug/
 /build/
 /.vscode/
+/my-mini-compiler/out/build/x64-Debug
+/.vs
