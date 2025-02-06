@@ -5,6 +5,7 @@ x--;
 x += 5;
 int y = $x;
 func (){}[]
+just words as indentifiers
 #one line comment
 int sanityCheck;
 /* multi line
