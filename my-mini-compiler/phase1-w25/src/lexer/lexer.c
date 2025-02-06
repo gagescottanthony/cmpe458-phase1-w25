@@ -162,21 +162,192 @@ Token get_next_token(const char *input, int *pos) {
     }
     // TODO: Add all remaining operators and test them
     // Operator handler
-    if (c == '+' || c == '-') {
+    /* List of Operators (Grouped by first character and behaviour):
+    
+    
+    //RULE: Standalone
+    $:  $ (factorial)
+
+    //RULE: Can be trailed by one repetition or an equals sign
+    +:  + (add), ++ (incre), += (add-assign)
+    -:  - (sub), -- (decre), -= (sub-assign)
+
+    //RULE: Can be trailed only by an equals sign
+
+    *:  * (mult), *= (mult-assign)      NOTE: ** not an op
+    /:  / (div), /= (div-assign)        NOTE: // is meaningless
+    %:  % (modulo), %= (mod-assign)
+    =:  = (assignment), == (logic eq)
+    !:  ! (bitwise not), != (logic not)
+
+    //RULE: Can be trailed only by itself
+    |:  | (b.w. or), || (log or), 
+    ^:  ^ (bitwise xor), ^^ (power)
+
+    //RULE: Can be trailed by itself or question mark and CANT standalone
+    &:  && (logic and), &? (b.w. and)   NOTE: & is a special char
+    
+    //RULE: Can repeat 3 times or be trailed by an equals sign
+    <:  < (less), <= (lesseq), << (shift left), <<< (rotate left)
+    >:  > (greater), >> (shift right), >= (greateq), >>> (rotate right)
+    
+    */
+    if ( c == '$' || c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '=' || c == '!'  || c == '|' || c == '^' || c == '&' || c == '<' || c== '>') {
+        // Check for consecutive operators
         if (last_token_type == 'o') {
-            // Check for consecutive operators
+
             token.error = ERROR_CONSECUTIVE_OPERATORS;
             token.lexeme[0] = c;
             token.lexeme[1] = '\0';
             (*pos)++;
             return token;
         }
-        token.type = TOKEN_OPERATOR;
-        token.lexeme[0] = c;
-        token.lexeme[1] = '\0';
-        last_token_type = 'o';
-        (*pos)++;
-        return token;
+        
+        //Determine first-char logic
+        char c_next = input[*pos + 1]; // c_next should always be in array bound, if passed in string was completed with a null terminal.
+        switch (c) {
+        
+        //Can be trailed by one repetition or an equals sign
+        case '+':
+        case '-':
+            if (c_next == '=' || c_next == c) { // +=, -= or ++, --
+                token.lexeme[0] = c;
+                token.lexeme[1] = c_next;
+                token.lexeme[2] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 2;
+                last_token_type = 'o';
+                return token;
+            }
+            else { // +, -
+                token.lexeme[0] = c;
+                token.lexeme[1] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 1;
+                last_token_type = 'o';
+                return token;
+            }
+            break;
+
+        //Can be trailed only by an equals sign
+        case '*':
+        case '/':
+        case '%':
+        case '=':
+        case '!':
+            if (c_next == '=') { // *=, /=, %=, ==, !=
+                token.lexeme[0] = c;
+                token.lexeme[1] = c_next;
+                token.lexeme[2] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 2;
+                last_token_type = 'o';
+                return token;
+            }
+            else { // *, /, %, =, !
+                token.lexeme[0] = c;
+                token.lexeme[1] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 1;
+                last_token_type = 'o';
+                return token;
+            }
+            break;
+
+        //Can be trailed only by itself
+        case '|':
+        case '^':
+            if (c_next == c) { // ||, ^^
+                token.lexeme[0] = c;
+                token.lexeme[1] = c_next;
+                token.lexeme[2] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 2;
+                last_token_type = 'o';
+                return token;
+            }
+            else { // |, ^
+                token.lexeme[0] = c;
+                token.lexeme[1] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 1;
+                last_token_type = 'o';
+                return token;
+            }
+            break;
+
+        //Can be trailed by itself or question mark and CANT standalone
+        case '&':
+            if (c_next == c || c_next == '?') { // &&, &?
+                token.lexeme[0] = c;
+                token.lexeme[1] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 1;
+                last_token_type = 'o';
+                return token;
+            }
+            else {
+                //TODO: ENSURE DISQUALIFICATION FOR SPECIAL CHARACTER &, UNLESS HANDLED BEFORE OPERATOR CODE
+            }
+            break;
+
+        //RULE: Can repeat 3 times or be trailed by an equals sign
+        case '<':
+        case '>':
+            if (c_next == c) { // <<, <<<, >>, >>>
+                //input of *pos+2 should be in bound because c_next was a regular character. at worst it is the null terminator (unless it is missing from passed char array)
+                if (input[*pos + 2] == c) { // <<<, >>>
+                    token.lexeme[0] = c;
+                    token.lexeme[1] = c;
+                    token.lexeme[2] = c;
+                    token.lexeme[3] = '\0';
+                    *pos += 3;
+                    last_token_type = 'o';
+                    return token;
+                }
+                else { // <<, >>
+                    token.lexeme[0] = c;
+                    token.lexeme[1] = c;
+                    token.lexeme[2] = '\0';
+                    token.type = TOKEN_OPERATOR;
+                    *pos += 2;
+                    last_token_type = 'o';
+                    return token;
+                }
+            }
+            //must be separate to prevent <=< from being valid, for example.
+            else if (c_next == '=') { // <=, >=
+                token.lexeme[0] = c;
+                token.lexeme[1] = c_next;
+                token.lexeme[2] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 2;
+                last_token_type = 'o';
+                return token;
+            }
+            else { // <, >
+                token.lexeme[0] = c;
+                token.lexeme[1] = '\0';
+                token.type = TOKEN_OPERATOR;
+                *pos += 1;
+                last_token_type = 'o';
+                return token;
+            }
+            break;
+
+        //Error -> in if block but not given a case
+        default:
+            printf("[WARN]: Character %c was accepted by if statement but not assigned a case. Assuming standalone operator.\n", c);
+        //Standalone
+        case '$':
+            token.lexeme[0] = c;
+            token.lexeme[1] = '\0';
+            token.type = TOKEN_OPERATOR;
+            *pos += 1;
+            last_token_type = 'o';
+            return token;
+            break;
+        }
     }
 
     // TODO: TEST THIS DELIMITER CODE
