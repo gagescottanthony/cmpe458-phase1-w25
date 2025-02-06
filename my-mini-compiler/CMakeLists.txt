@@ -11,4 +11,6 @@ include_directories(${PROJECT_SOURCE_DIR}/phase1-w25/include)
 # Add executables when needed: Make sure you specify the path to your .c or .h file
 add_executable(my-mini-compiler
         phase1-w25/include/tokens.h
+        phase1-w25/include/keywords.h
+        phase1-w25/include/keywords.c
         phase1-w25/src/lexer/lexer.c)

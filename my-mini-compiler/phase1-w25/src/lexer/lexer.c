@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "../../include/tokens.h"
+#include "../../include/keywords.h"
 
 // Line tracking
 static int current_line = 1;
@@ -115,6 +116,26 @@ Token get_next_token(const char *input, int *pos) {
 
     // TODO: Add keyword and identifier handling here
     // Hint: You'll have to add support for keywords and identifiers, and then string literals
+    // Handle keywords and identifiers, can start with only alphabetic characters
+    if(isalpha(c) || c == '_'){
+        int i = 0;
+
+        do{
+            token.lexeme[i++] = c;
+            (*pos)++;
+            c = input[*pos];
+        } while((isalnum(c) || c == '_') && i < sizeof(token.lexeme) - 1); // numbers and _ are valid in identifiers
+        // Terminate string
+        token.lexeme[i] = '\0';
+
+        if(iskeyword(token.lexeme)){
+            token.type = TOKEN_KEYWORD;
+        }
+        else{
+            token.type = TOKEN_IDENTIFIER;
+        }
+        return token;
+    }
 
     // TODO: Add string literal handling here
 
@@ -149,7 +170,7 @@ Token get_next_token(const char *input, int *pos) {
 // This is a basic lexer that handles numbers (e.g., "123", "456"), basic operators (+ and -), consecutive operator errors, whitespace and newlines, with simple line tracking for error reporting.
 
 int main() {
-    const char *input = "123 + 456 - 789\n1 ++ 2"; // Test with multi-line input
+    const char *input = "123 + 456 - 789\n1 ++ 2 \nint print myVar my_Var"; // Test with multi-line input
     int position = 0;
     Token token;
 
