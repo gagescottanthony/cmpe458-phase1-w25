@@ -178,22 +178,28 @@ Token get_next_token(const char *input, int *pos) {
     // String literal handler
     if(c == '"'){
         int i = 0;
+        int untermed = 0;
         do{
             token.lexeme[i++] = c;
             (*pos)++;
             c = input[*pos];
             if(c = '\0'){
                 //string has reached EOF
-                token.error = ERROR_UNTERMINATED_STRING;
+                untermed = 1;
                 break;
             }
         } while(c != '"' && i < sizeof(token.lexeme) - 1);
         //terminate string
         //need to include space for the last closing quote
-        token.lexeme[i++] = c;
-        (*pos)++;
-        c = input[*pos];
-        token.lexeme[i] = '\0';
+        if(untermed == 1){
+            token.error = ERROR_UNTERMINATED_STRING;
+        }
+        else{
+            token.lexeme[i++] = c;
+            (*pos)++;
+            c = input[*pos];
+            token.lexeme[i] = '\0';
+        }
         token.type = TOKEN_STRING_LITERAL;
         last_token_type = 's';
         return token;
