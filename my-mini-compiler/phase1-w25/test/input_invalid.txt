@@ -2,5 +2,4 @@
 int x + = = 5;
 int x = = 5;
 int @x = 100;
-int &x = 55;
 "string literal unterminated

@@ -4,8 +4,9 @@ x++;
 x--;
 x += 5;
 int y = $x;
+int _x;
 func (){}[]
-if(int i != x){}
+if(int i != x)
 just words as indentifiers
 &
 _

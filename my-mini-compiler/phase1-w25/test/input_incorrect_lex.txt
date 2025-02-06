@@ -1,0 +1,15 @@
+int x = = 5;
+x+-;
+
+if(x !== 6){
+    united(x == 2){
+        x-+
+        print &
+    }
+    print();
+}
+
+func void celebrate(){
+    print("HAPPY BIRTHDAY WE NEVER CLOSED THIS   );
+    # SKIP THIS LINE
+}

@@ -1,0 +1,21 @@
+int x = 5;
+x++;
+
+if(x == 6){
+    until(x == 2){
+        x--;
+        print(x);
+    }
+    print(&y);
+}
+
+func void celebrate(){
+    print("HAPPY BIRTHDAY");
+    # SKIP THIS LINE
+    int y = 5;
+    /* SKIP THIS TO PLEASE
+    if(x == 5){
+        x++;
+    }
+    END THE COMMENT */
+}

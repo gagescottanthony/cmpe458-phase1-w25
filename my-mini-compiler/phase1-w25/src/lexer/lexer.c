@@ -151,18 +151,8 @@ Token get_next_token(const char *input, int *pos) {
         return token;
     }
 
-    // Special character handler
-    if((c == '&' && input[*pos + 1] != '&') || c == '_') {
-        token.lexeme[0] = c;
-        token.lexeme[1] = '\0';
-        token.type = TOKEN_SPECIAL_CHARACTER;
-        (*pos)++;
-        last_token_type = 'z'; //special character
-        return token;
-    }
-
     // Keyword and Identifier handler
-    if(isalpha(c) || c == '_'){
+    if(isalpha(c) || (c == '_' && isalnum(input[*pos + 1]))){
         int i = 0;
         do{
             token.lexeme[i++] = c;
@@ -180,6 +170,16 @@ Token get_next_token(const char *input, int *pos) {
             token.type = TOKEN_IDENTIFIER;
             last_token_type = 'i'; //identifier
         }
+        return token;
+    }
+
+    // Special character handler
+    if((c == '&' && input[*pos + 1] != '&') || c == '_') {
+        token.lexeme[0] = c;
+        token.lexeme[1] = '\0';
+        token.type = TOKEN_SPECIAL_CHARACTER;
+        (*pos)++;
+        last_token_type = 'z'; //special character
         return token;
     }
 
@@ -467,7 +467,7 @@ Token get_next_token(const char *input, int *pos) {
 
 int main() {
     // get file
-    FILE *file = fopen("../phase1-w25/test/input_valid.txt", "r");
+    FILE *file = fopen("../phase1-w25/test/input_incorrect_lex.txt", "r");
     if (file == NULL) {
         printf("Error opening file\n");
         return 1;
