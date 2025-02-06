@@ -1,0 +1,101 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\src\\lexer\\lexer.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:my-mini-compiler\\phase1-w25\\src\\lexer\\lexer.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\include\\keywords.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:my-mini-compiler\\phase1-w25\\include\\keywords.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\include\\keywords.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:my-mini-compiler\\phase1-w25\\include\\keywords.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\include\\tokens.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:my-mini-compiler\\phase1-w25\\include\\tokens.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|CMake Overview Pages||{B1CAA5B0-FEB1-4350-8AB9-F895876842F2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "keywords.c",
+              "DocumentMoniker": "C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\include\\keywords.c",
+              "RelativeDocumentMoniker": "my-mini-compiler\\phase1-w25\\include\\keywords.c",
+              "ToolTip": "C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\include\\keywords.c",
+              "RelativeToolTip": "my-mini-compiler\\phase1-w25\\include\\keywords.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-02-06T20:07:03.231Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "keywords.h",
+              "DocumentMoniker": "C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\include\\keywords.h",
+              "RelativeDocumentMoniker": "my-mini-compiler\\phase1-w25\\include\\keywords.h",
+              "ToolTip": "C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\include\\keywords.h",
+              "RelativeToolTip": "my-mini-compiler\\phase1-w25\\include\\keywords.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-02-06T20:07:23.234Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "tokens.h",
+              "DocumentMoniker": "C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\include\\tokens.h",
+              "RelativeDocumentMoniker": "my-mini-compiler\\phase1-w25\\include\\tokens.h",
+              "ToolTip": "C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\include\\tokens.h",
+              "RelativeToolTip": "my-mini-compiler\\phase1-w25\\include\\tokens.h",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-02-06T18:44:31.977Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "lexer.c",
+              "DocumentMoniker": "C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\src\\lexer\\lexer.c",
+              "RelativeDocumentMoniker": "my-mini-compiler\\phase1-w25\\src\\lexer\\lexer.c",
+              "ToolTip": "C:\\Users\\gages\\Documents\\cmpe458-phase1-w25\\my-mini-compiler\\phase1-w25\\src\\lexer\\lexer.c",
+              "RelativeToolTip": "my-mini-compiler\\phase1-w25\\src\\lexer\\lexer.c",
+              "ViewState": "AgIAAJMAAAAAAAAAAAAAAMkAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-02-06T10:05:02.349Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CMake Overview Pages",
+              "DocumentMoniker": "CMake Overview Pages",
+              "ToolTip": "CMake Overview Pages",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-02-06T09:54:25.407Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -117,18 +117,19 @@ Token get_next_token(const char *input, int *pos) {
     // Multi line comment
     // should skip until */ is reached
     if (c == '/' && input[*pos + 1] == '*') {
-        (*pos)++;
+        (*pos)++; // skip /
+        // c = input[*pos];
+        do{
+            (*pos)++; //move ahead (will also skip asterisk in /*)
+            c = input[*pos];
+            if (c == '\0') {
+                printf("[WARN]: Unclosed comment\n");
+                break;
+            }
+        }while((c != '*') && (input[*pos + 1] != '/'));
+        (*pos)+=2; // move ahead of */
         c = input[*pos];
-       do{
-            (*pos)++;
-            c = input[*pos];
-       }while((c != '*') && (input[*pos + 1] != '/'));
-       while(c == '*' || c == '/'){
-        //skip comment closing
-            (*pos)++;
-            c = input[*pos];
-       }
-       //skip to start of next token
+        //skip to start of next token
         while(c == ' ' || c == '\t' || c == '\n'  && c != '\0'){
             (*pos)++;
             c = input[*pos];
