@@ -181,6 +181,11 @@ Token get_next_token(const char *input, int *pos) {
             token.lexeme[i++] = c;
             (*pos)++;
             c = input[*pos];
+            if(c = '\0'){
+                //string has reached EOF
+                token.error = ERROR_UNTERMINATED_STRING;
+                break;
+            }
         } while(c != '"' && i < sizeof(token.lexeme) - 1);
         //terminate string
         //need to include space for the last closing quote
