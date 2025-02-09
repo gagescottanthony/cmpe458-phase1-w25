@@ -12,7 +12,7 @@ if(x == 6){
 }
 
 func void celebrate(){
-    print("HAPPY BIRTHDAY");
+    print("HAPPY \n BIRTHDAY");
     # SKIP THIS LINE
     int y = 5;
     /* SKIP THIS TO PLEASE

@@ -287,7 +287,6 @@ Token get_next_token(const char *input, int *pos) {
         return token;
     }
 
-    // Operator handler
     /* List of Operators (Grouped by first character and behaviour):
     //RULE: Standalone
     $:  $ (factorial)
@@ -314,7 +313,7 @@ Token get_next_token(const char *input, int *pos) {
     <:  < (less), <= (less or equal), << (shift left), <<< (rotate left)
     >:  > (greater), >= (greater or equal), >> (shift right), >>> (rotate right)
     */
-
+    // Operator handler
     if (c == '$' || c == '+' || c == '-' || c == '*' || c == '/'
         || c == '%' || c == '=' || c == '!'  || c == '|'
         || c == '^' || c == '&' || c == '<' || c== '>') {
