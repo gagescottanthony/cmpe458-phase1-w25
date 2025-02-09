@@ -533,7 +533,7 @@ Token get_next_token(const char *input, int *pos) {
 
 int main() {
     // get file
-    FILE *file = fopen("../phase1-w25/test/input_valid.txt", "r");
+    FILE *file = fopen("../phase1-w25/test/input_correct_lex.txt", "r");
     if (file == NULL) {
         printf("Error opening file\n");
         return 1;
@@ -582,7 +582,7 @@ int main() {
     current_line = 1;
 
     // get file
-    file = fopen("../phase1-w25/test/input_invalid.txt", "r");
+    file = fopen("../phase1-w25/test/input_incorrect_lex.txt", "r");
     if (file == NULL) {
         printf("Error opening file\n");
         return 1;
