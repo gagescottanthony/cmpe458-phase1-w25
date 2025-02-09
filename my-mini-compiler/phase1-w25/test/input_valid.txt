@@ -1,18 +1,7 @@
-123 + 456
-int x = 5;
-x++;
-x--;
-x += 5;
-int y = $x;
-int _x;
-func (){}[]
-if(int i != x)
-just words as indentifiers
-&
-_
-x && y
-#one line comment
-int sanityCheck;
-/* multi line
-comment */
-"string literal"
+char 'g'
+char '\\'
+char '\?'
+char '\"'
+char '\''
+char '\r'
+char '\t'

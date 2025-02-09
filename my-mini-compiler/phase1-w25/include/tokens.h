@@ -19,6 +19,7 @@ typedef enum {
     TOKEN_KEYWORD,          // e.g. func if until while for
     TOKEN_IDENTIFIER,
     TOKEN_STRING_LITERAL,   // e.g. "SeaPlus+"
+    TOKEN_CHAR_LITERAL,     // e.g. 'c'
     TOKEN_DELIMITER,        // e.g. {} [] ()
     TOKEN_SPECIAL_CHARACTER // e.g. _ &
 } TokenType;
@@ -32,6 +33,8 @@ typedef enum {
     ERROR_INVALID_NUMBER,
     ERROR_CONSECUTIVE_OPERATORS,
     ERROR_UNTERMINATED_STRING,
+    ERROR_INVALID_ESCAPE_CHARACTER,
+    ERROR_UNTERMINATED_CHARACTER,
     ERROR_OPEN_DELIMITER
 } ErrorType;
 

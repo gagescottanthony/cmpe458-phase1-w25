@@ -1,5 +1,7 @@
 int x = 5;
 x++;
+char hi = 'g';
+char hi = '\\';
 
 if(x == 6){
     until(x == 2){
