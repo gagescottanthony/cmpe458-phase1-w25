@@ -221,9 +221,8 @@ Token get_next_token(const char *input, int *pos) {
                 }
                 break;
             }
-            // get character
+            // get character for comparison
             char c_string = input[*pos];
-
             // closing quotation case
             if (c_string == '\"') {
                 token.lexeme[i++] = c_string;
@@ -241,14 +240,14 @@ Token get_next_token(const char *input, int *pos) {
                 break;
             }
 
-            if (c_string == '\\' && i <= sizeof(token.lexeme) - 2) { // case of escape character
+            // case of escape character
+            if (c_string == '\\' && i <= sizeof(token.lexeme) - 2) {
                 // introduces niche case of the character that overflows the token size, might need its own handler
                 char c_escape = input[*pos+1];
                 switch (c_escape) {
                     case '\\':
                     case '\'':
                     case '\"':
-                    case '\?':
                         // characters that are on their own
                         token.lexeme[i++] = c_escape;
                         (*pos) += 2;
@@ -301,44 +300,46 @@ Token get_next_token(const char *input, int *pos) {
                 (*pos) += 4;
                 return token;
             }
-
             // case block for all escape characters supported by the system
             char c_escape = input[*pos+2];
             switch (c_escape) {
                 case '\\':
                 case '\'':
                 case '\"':
-                case '\?':
+                    // basic escape chars
+                    token.lexeme[0] = c_escape;
+                    token.lexeme[1] = '\0';
+                    break;
                 case 'n':
+                    // newline
+                    token.lexeme[0] = '\n';
+                    token.lexeme[1] = '\0';
+                    break;
                 case 'r':
+                    // carriage return
+                    token.lexeme[0] = '\r';
+                    token.lexeme[1] = '\0';
+                    break;
                 case 't':
-                    // all valid escape chars \\ \' \" \? \r \r \t
-                    token.lexeme[0] = c_char;
-                    token.lexeme[1] = c_escape;
-                    token.lexeme[2] = '\0';
-                    token.type = TOKEN_CHAR_LITERAL;
-                    last_token_type = 'x'; // escape char
-                    (*pos) += 4;
-                    return token;
+                    // tab
+                    token.lexeme[0] = '\t';
+                    token.lexeme[1] = '\0';
+                    break;
                 default:
                     // unrecognized escape character
                     token.error = ERROR_INVALID_ESCAPE_CHARACTER;
-                    token.lexeme[0] = c_char;
-                    token.lexeme[1] = '\0';
                     last_token_type = 'e'; // error
                     (*pos) += 4;
                     return token;
             }
+            token.type = TOKEN_CHAR_LITERAL;
+            last_token_type = 'x'; // escape char
+            (*pos) += 4;
+            return token;
         }
-        // using an invalid character like ? (don't need to check \ because it would have been caught above)
-        if (c_char == '\?' ) {
-            token.error = ERROR_INVALID_CHAR;
-            token.lexeme[0] = c_char;
-            token.lexeme[1] = '\0';
-            last_token_type = 'e'; // error
-            (*pos) += 3;
-        }
-        else if (input[*pos+2] != '\'') { // unterminated character
+
+        // unterminated character
+        if (input[*pos+2] != '\'') {
             token.error = ERROR_UNTERMINATED_CHARACTER;
             last_token_type = 'e'; // error
             (*pos) += 3;
