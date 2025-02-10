@@ -249,12 +249,23 @@ Token get_next_token(const char *input, int *pos) {
                     case '\'':
                     case '\"':
                     case '\?':
-                    case 'n':
-                    case 'r':
-                    case 't':
-                        // all valid escape chars \\ \' \" \? \n \r \t
-                        token.lexeme[i++] = c_string;
+                        // characters that are on their own
                         token.lexeme[i++] = c_escape;
+                        (*pos) += 2;
+                        break;
+                    case 'n':
+                        // newline
+                        token.lexeme[i++] = '\n';
+                        (*pos) += 2;
+                        break;
+                    case 'r':
+                        // carriage return
+                        token.lexeme[i++] = '\r';
+                        (*pos) += 2;
+                        break;
+                    case 't':
+                        // tab
+                        token.lexeme[i++] = '\t';
                         (*pos) += 2;
                         break;
                     default:
