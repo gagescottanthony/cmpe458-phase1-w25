@@ -24,6 +24,9 @@ void print_error(ErrorType error, int line, const char *lexeme) {
         case ERROR_CONSECUTIVE_OPERATORS:
             printf("Consecutive operators not allowed\n");
             break;
+        case ERROR_STRING_OVERFLOW:
+            printf("Overflow in string\n");
+            break;
         case ERROR_UNTERMINATED_STRING:
             printf("Unterminated string\n");
             break;
@@ -195,28 +198,80 @@ Token get_next_token(const char *input, int *pos) {
     // String literal handler
     if(c == '"'){
         int i = 0;
-        int unterminated = 0;
+        token.lexeme[i++] = c;
+        (*pos)++;
         do{
-            token.lexeme[i++] = c;
-            (*pos)++;
-            c = input[*pos];
-            if(c == '\0'){ //string has reached EOF
-                unterminated = 1;
+            // check to see if string is too long (above 100 characters)
+            if(i >= sizeof(token.lexeme) - 1) {
+                token.error = ERROR_STRING_OVERFLOW;
+                token.lexeme[i] = '\0';
+                last_token_type = 'e'; // error
+                (*pos)++;
+                char overflow = input[*pos];
+                // continues until the string is closed, just doesn't save the string data anymore
+                while(overflow != '\"') {
+                    // have to check for EOF to ensure string is terminated at some point
+                    if (input[*pos] == '\0') {
+                        token.error = ERROR_UNTERMINATED_STRING;
+                        break;
+                    }
+                    // continue to track but not save
+                    overflow = input[*pos];
+                    (*pos)++;
+                }
                 break;
             }
-        } while(c != '"' && i < sizeof(token.lexeme) - 1);
-        //terminate string
-        //need to include space for the last closing quote
-        if(unterminated == 1){
-            token.error = ERROR_UNTERMINATED_STRING;
-        }
-        else{
-            token.lexeme[i++] = c;
-            (*pos)++;
-            token.lexeme[i] = '\0';
-        }
-        token.type = TOKEN_STRING_LITERAL;
-        last_token_type = 's'; //string
+            // get character
+            char c_string = input[*pos];
+
+            // closing quotation case
+            if (c_string == '\"') {
+                token.lexeme[i++] = c_string;
+                token.lexeme[i] = '\0';
+                token.type = TOKEN_STRING_LITERAL;
+                last_token_type = 's'; //string
+                (*pos)++;
+                break;
+            }
+            // end of file means unterminated
+            if (c_string == '\0') {
+                token.error = ERROR_UNTERMINATED_STRING;
+                token.lexeme[i] = '\0';
+                last_token_type = 'e'; //error
+                break;
+            }
+
+            if (c_string == '\\' && i <= sizeof(token.lexeme) - 2) { // case of escape character
+                // introduces niche case of the character that overflows the token size, might need its own handler
+                char c_escape = input[*pos+1];
+                switch (c_escape) {
+                    case '\\':
+                    case '\'':
+                    case '\"':
+                    case '\?':
+                    case 'n':
+                    case 'r':
+                    case 't':
+                        // all valid escape chars \\ \' \" \? \n \r \t
+                        token.lexeme[i++] = c_string;
+                        token.lexeme[i++] = c_escape;
+                        (*pos) += 2;
+                        break;
+                    default:
+                        // unrecognized escape character
+                        token.error = ERROR_INVALID_ESCAPE_CHARACTER;
+                        token.lexeme[i++] = c_string;
+                        token.lexeme[i++] = c_escape;
+                        (*pos) += 2;
+                        break;
+                }
+            } else { // case of any valid character
+                token.lexeme[i++] = c_string;
+                (*pos)++;
+            }
+        } while(1);
+
+        // returning
         return token;
     }
 

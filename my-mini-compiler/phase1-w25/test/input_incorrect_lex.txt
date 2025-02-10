@@ -10,7 +10,8 @@ if(x < = 6){
     print();
 }
 
-func void celebrate(){
-    print("HAPPY BIRTHDAY WE NEVER CLOSED THIS   );
-    # SKIP THIS LINE
+func void celebrate(integer notAKeyword){
+    char 'g
+    print("HAPPY BIRTHDAY WE DID CLOSE THIS IT JUST OVERFLOWS BECAUSE WE ARE TOO VERBOSE FOR THE SYSTEM TO UNDERSTAND WHAT IS HAPPENING");
+    print("HAPPY BIRTHDAY WE DIDN'T CLOSE THE STRING );
 }
