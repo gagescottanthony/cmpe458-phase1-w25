@@ -12,6 +12,7 @@ if(x < = 6){
 
 func void celebrate(integer notAKeyword){
     char 'g
+    print("INVALID ESCAPE \h HERE");
     print("HAPPY BIRTHDAY WE DID CLOSE THIS IT JUST OVERFLOWS BECAUSE WE ARE TOO VERBOSE FOR THE SYSTEM TO UNDERSTAND WHAT IS HAPPENING");
     print("HAPPY BIRTHDAY WE DIDN'T CLOSE THE STRING );
 }

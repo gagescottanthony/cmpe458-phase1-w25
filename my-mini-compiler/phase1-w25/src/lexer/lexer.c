@@ -273,6 +273,7 @@ Token get_next_token(const char *input, int *pos) {
                         token.error = ERROR_INVALID_ESCAPE_CHARACTER;
                         token.lexeme[i++] = c_string;
                         token.lexeme[i++] = c_escape;
+                        last_token_type = 'e'; // error
                         (*pos) += 2;
                         break;
                 }
