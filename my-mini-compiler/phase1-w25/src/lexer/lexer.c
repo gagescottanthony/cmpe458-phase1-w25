@@ -239,7 +239,6 @@ Token get_next_token(const char *input, int *pos) {
                 last_token_type = 'e'; //error
                 break;
             }
-
             // case of escape character
             if (c_string == '\\' && i <= sizeof(token.lexeme) - 2) {
                 // introduces niche case of the character that overflows the token size, might need its own handler

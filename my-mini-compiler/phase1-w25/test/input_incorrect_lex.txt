@@ -1,5 +1,5 @@
-int x = = 5;
-x+-;
+int x = = 5
+x+-
 char '\u'
 
 if(x < = 6){
