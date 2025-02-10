@@ -16,7 +16,7 @@ func void celebrate(){
     print("HAVE A (TAB HERE) \t HAPPY (NEWLINE HERE) \n BIRTHDAY");
     # SKIP THIS LINE
     int y = 5;
-    /* SKIP THIS TO PLEASE
+    /* SKIP THIS TOO PLEASE
     if(x == 5){
         x++;
     }
