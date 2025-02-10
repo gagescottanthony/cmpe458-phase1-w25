@@ -240,7 +240,7 @@ Token get_next_token(const char *input, int *pos) {
                 break;
             }
             // case of escape character
-            if (c_string == '\\' && i <= sizeof(token.lexeme) - 2) {
+            if (c_string == '\\' && i <= sizeof(token.lexeme) - 1) {
                 // introduces niche case of the character that overflows the token size, might need its own handler
                 char c_escape = input[*pos+1];
                 switch (c_escape) {
